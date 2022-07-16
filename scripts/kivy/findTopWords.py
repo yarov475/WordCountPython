@@ -1,14 +1,15 @@
 from __future__ import print_function
 import collections
 from nltk.stem import WordNetLemmatizer
-
+import main
+lemmatizer = WordNetLemmatizer()
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
-lemmatizer = WordNetLemmatizer()
+
 
 def make_word_list():
     ps = PorterStemmer()
-    # file = open('../INPUT.txt')
+
     file = input('write your text here: \n')
 
 

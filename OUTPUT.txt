@@ -1,13 +1,5 @@
 auditory[ˈɔdɪˌtɔri]  слуховой 
-wakefulness[wakefulness*]  бодрствование 
-high-gamma[high-gamma*]  высокая гамма 
 gyrus[gyrus*]  извилина 
-cortex[ˈkɔrtɛks]  кора 
-desynchronized[desynchronized*]  десинхронизированный 
-abd[abd*]  США 
-nrem[nrem*]  nrem 
-rem[rɛm]  бэр 
-waking[ˈweɪkɪŋ]  пробуждение 
 neuronal[ˈnʊˌroʊnəlz]  нейронный 
-heschl’s[heschl’s*]  Хешля 
+high-gamma[high-gamma*]  высокая гамма 
 []   

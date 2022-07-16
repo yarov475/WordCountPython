@@ -1,12 +1,4 @@
 auditory
-wakefulness
-high-gamma
 gyrus
-cortex
-desynchronized
-abd
-nrem
-rem
-waking
 neuronal
-heschl’s
+high-gamma
