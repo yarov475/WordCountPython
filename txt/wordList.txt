@@ -1,4 +1,0 @@
-auditory
-gyrus
-neuronal
-high-gamma

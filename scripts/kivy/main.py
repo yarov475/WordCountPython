@@ -18,7 +18,6 @@ lemmatizer = WordNetLemmatizer()
 Window.clearcolor = (0, 33 / 255, 71 / 255, 1)
 
 
-
 class TranslatorApp(App):
     def build(self):
         layout = GridLayout(cols=2,
@@ -29,7 +28,7 @@ class TranslatorApp(App):
                             )
         self.INPUT = TextInput(
             text='put your text here: example\nIn summary, our results reveal robust neuronal and high-gamma auditory responses during sleep in Heschl’s gyrus and also in the anterior Superior Temporal Gyrus (STG), planum polare and middle temporal gyrus—well beyond early auditory cortex.')
-        self.OUTPUT = TextInput(text='list to learn ')
+        self.OUTPUT = TextInput(text='list to learn: \n ')
         submit = Button(text='Translate', on_press=self.submit)
         layout.add_widget(self.INPUT)
         layout.add_widget(self.OUTPUT)
@@ -74,26 +73,14 @@ class TranslatorApp(App):
             print("\nOK. The {} most common words are in: \n".format(n_print), out.name)
             word_counter = collections.Counter(wordcount)
             for word, count in word_counter.most_common(n_print):
+                translator = Translator()
                 lems = lemmatizer.lemmatize(word, pos='a')
                 print(lems)
-                print(lemmatizer.lemmatize(word, pos='a'), file=out)
+                translation = translator.translate(lems, dest="ru")
+                raw_translated = f"{translation.origin}[{p.convert(translation.origin)}]  {translation.text}\n "
+                self.OUTPUT.text += raw_translated
+
 
         make_word_list()
-
-        def make_output_gloss():
-            translator = Translator()
-            # translate more than a phrase
-            outputs = open('../../txt/wordList.txt')
-            out = open('../../OUTPUT.txt', 'w')
-            word_list = outputs.read()
-
-            sentences = word_list.split('\n')
-            translations = translator.translate(sentences, dest="ru")
-            for translation in translations:
-                print(f"{translation.origin}[{p.convert(translation.origin)}]  {translation.text} ", file=out)
-                self.OUTPUT.text += f"{translation.origin}[{p.convert(translation.origin)}]  {translation.text}\n "
-
-        make_output_gloss()
-
 
 TranslatorApp().run()
