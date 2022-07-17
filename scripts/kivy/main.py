@@ -4,14 +4,10 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 from kivy.core.window import Window
-from kivy.core.text import Label as CoreLabel
 import collections
 from nltk.stem import WordNetLemmatizer
 from nltk.stem import PorterStemmer
-from nltk.tokenize import word_tokenize
-import googletrans
 import eng_to_ipa as p
-from asyncore import read
 from googletrans import Translator
 
 lemmatizer = WordNetLemmatizer()
@@ -36,51 +32,43 @@ class TranslatorApp(App):
         return layout
 
     def submit(self, obj):
-        print(self.INPUT.text)
+        file = self.INPUT.text
+        ps = PorterStemmer()
+        stopwords = set(line.strip() for line in open('../../txt/stopwords.txt'))
+        # stopwords = stopwords.union(set(['mr','mrs','one','two','said']))
+        # Instantiate a dictionary, and for every word in the file,
+        # Add to the dictionary if it doesn't exist. If it does, increase the count.
+        wordcount = {}
+        # To eliminate duplicates, remember to split by punctuation, and use case demiliters.
+        for word in file.lower().split():
+            word = word.replace(".", "")
+            word = word.replace(",", "")
+            word = word.replace(":", "")
+            word = word.replace("\"", "")
+            word = word.replace("!", "")
+            word = word.replace("*", "")
+            word = word.replace("`", "")
+            word = word.replace("'", " ")
+            word = word.replace("?", " ")
 
-        def make_word_list():
-            file = self.INPUT.text
-            ps = PorterStemmer()
-            out = open('../../txt/wordList.txt', 'w')
+            if word not in stopwords:
+                if word not in wordcount:
+                    wordcount[word] = 1
+                else:
+                    wordcount[word] += 1
+        # Print most common word
+        n_print = 4
+        word_counter = collections.Counter(wordcount)
+        for word, count in word_counter.most_common(n_print):
+            translator = Translator()
+            lems = lemmatizer.lemmatize(word, pos='a')
+            more_lines = ['', 'Append text files', 'The End']
+            with open('../../txt/stopwords.txt', 'a') as f:
+                f.writelines('\n'+lems)
 
-            # https://towardsdatascience.com/very-simple-python-script-for-extracting-most-common-words-from-a-story-1e3570d0b9d0
-
-            # Stopwords
-            stopwords = set(line.strip() for line in open('../../txt/stopwords.txt'))
-            # stopwords = stopwords.union(set(['mr','mrs','one','two','said']))
-            # Instantiate a dictionary, and for every word in the file,
-            # Add to the dictionary if it doesn't exist. If it does, increase the count.
-            wordcount = {}
-            # To eliminate duplicates, remember to split by punctuation, and use case demiliters.
-            for word in file.lower().split():
-                word = word.replace(".", "")
-                word = word.replace(",", "")
-                word = word.replace(":", "")
-                word = word.replace("\"", "")
-                word = word.replace("!", "")
-                word = word.replace("*", "")
-                word = word.replace("`", "")
-                word = word.replace("'", " ")
-                word = word.replace("?", " ")
-
-                if word not in stopwords:
-                    if word not in wordcount:
-                        wordcount[word] = 1
-                    else:
-                        wordcount[word] += 1
-            # Print most common word
-            n_print = 4
-            print("\nOK. The {} most common words are in: \n".format(n_print), out.name)
-            word_counter = collections.Counter(wordcount)
-            for word, count in word_counter.most_common(n_print):
-                translator = Translator()
-                lems = lemmatizer.lemmatize(word, pos='a')
-                print(lems)
-                translation = translator.translate(lems, dest="ru")
-                raw_translated = f"{translation.origin}[{p.convert(translation.origin)}]  {translation.text}\n "
-                self.OUTPUT.text += raw_translated
-
-
-        make_word_list()
+            print(lems)
+            translation = translator.translate(lems, dest="ru")
+            raw_translated = f"{translation.origin}[{p.convert(translation.origin)}]  {translation.text}\n "
+            self.OUTPUT.text += raw_translated
 
 TranslatorApp().run()
