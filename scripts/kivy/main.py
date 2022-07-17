@@ -74,9 +74,9 @@ class TranslatorApp(App):
             print("\nOK. The {} most common words are in: \n".format(n_print), out.name)
             word_counter = collections.Counter(wordcount)
             for word, count in word_counter.most_common(n_print):
+                lems = lemmatizer.lemmatize(word, pos='a')
+                print(lems)
                 print(lemmatizer.lemmatize(word, pos='a'), file=out)
-
-        self.OUTPUT.text = '****stage 1***'
 
         make_word_list()
 
@@ -91,6 +91,7 @@ class TranslatorApp(App):
             translations = translator.translate(sentences, dest="ru")
             for translation in translations:
                 print(f"{translation.origin}[{p.convert(translation.origin)}]  {translation.text} ", file=out)
+                self.OUTPUT.text += f"{translation.origin}[{p.convert(translation.origin)}]  {translation.text}\n "
 
         make_output_gloss()
 
