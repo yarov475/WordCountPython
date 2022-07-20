@@ -9,7 +9,9 @@ from nltk.stem import WordNetLemmatizer
 from nltk.stem import PorterStemmer
 import eng_to_ipa as p
 from googletrans import Translator
+import datetime
 
+time = f"{datetime.datetime.now()}.csv"
 lemmatizer = WordNetLemmatizer()
 Window.clearcolor = (0, 33 / 255, 71 / 255, 1)
 
@@ -24,11 +26,13 @@ class TranslatorApp(App):
                             )
         self.INPUT = TextInput(
             text='put your text here: example\nIn summary, our results reveal robust neuronal and high-gamma auditory responses during sleep in Heschl’s gyrus and also in the anterior Superior Temporal Gyrus (STG), planum polare and middle temporal gyrus—well beyond early auditory cortex.')
-        self.OUTPUT = TextInput(text='list to learn: \n ')
+        self.OUTPUT = TextInput(text=f"list to learn,{time} \n " + chr(2200))
         submit = Button(text='Translate', on_press=self.submit)
+        printCSV = Button(text='Скачать список CSV', on_press=self.printCSV)
         layout.add_widget(self.INPUT)
         layout.add_widget(self.OUTPUT)
         layout.add_widget(submit)
+        layout.add_widget(printCSV)
         return layout
 
     def submit(self, obj):
@@ -64,11 +68,18 @@ class TranslatorApp(App):
             lems = lemmatizer.lemmatize(word, pos='a')
             more_lines = ['', 'Append text files', 'The End']
             with open('../../txt/stopwords.txt', 'a') as f:
-                f.writelines('\n'+lems)
+                f.writelines('\n' + lems)
 
             print(lems)
             translation = translator.translate(lems, dest="ru")
-            raw_translated = f"{translation.origin}[{p.convert(translation.origin)}]  {translation.text}\n "
-            self.OUTPUT.text += raw_translated
+            csv = ''
+            csv_translated = f"{translation.origin}[{p.convert(translation.origin)}],{translation.text},\n "
+            self.OUTPUT.text += csv_translated
+
+    def printCSV(self, obj):
+
+        out = open(time, 'w')
+        print(self.OUTPUT.text, file=out)
+
 
 TranslatorApp().run()
