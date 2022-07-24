@@ -1,0 +1,12 @@
+ wand[wɑnd],палочка,
+ scabbers[scabbers*],струпья,
+ mcgonagall[mcgonagall*],Макгонагалл,
+ crookshanks[ˈkrʊkˌʃæŋks],косолапы,
+ pettigrew[ˈpɛtɪˌgru],Петтигрю,
+ potter[ˈpɑtər],гончар,
+
+
+
+    regex = re.compile('[^a-zA-Z]')
+            word = regex.sub(' ', word)
+ 
