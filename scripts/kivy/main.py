@@ -1,4 +1,3 @@
-from __future__ import print_function
 from kivy.app import App
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
